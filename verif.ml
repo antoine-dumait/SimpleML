@@ -1,5 +1,13 @@
-let type_list = []
-(* let type_list: (String * Syntax.typ) List = [] *)
+type myTyp = Var | Fonc
+type valeur =   | Var of Syntax.idvar | IdFun of Syntax.idfun
+type truc = {
+  niveau: int;
+  id: valeur;
+  quoi: myTyp;
+  retour: Syntax.typ;
+}
+
+type env_type = truc list
 
 let add_var_type var_name _ = print_endline var_name
 (* let add_var_type var_name var_type = (var_name, var_type)::type_list *)
@@ -12,7 +20,7 @@ let verif_expr expr = match expr with
 | Syntax.Int i -> let _  = print_int i in true
 | _ -> let _ = if List.length type_list >= 1 then 
                   print_endline (fst(List.hd type_list)) 
-else print_endline "nothing"; print_int (List.length type_list); print_endline ""
+               else print_endline "nothing"; print_int (List.length type_list); print_endline ""
                in true
 
 
@@ -27,8 +35,9 @@ else print_endline "nothing"; print_int (List.length type_list); print_endline "
   (* let _ = print_endline (Syntax.string_of_expr expr) in true *)
 
 (* Syntax.fun-decl -> bool *)
-(* TODO: demander prof *)
-let verif_decl_fun (fonction: Syntax.fun_decl) = let _ = print_endline fonction.id in 
+(* TODO: demander prof si il faut declarer le type d'entrée*)
+let verif_decl_fun (fonction: Syntax.fun_decl) = let _ = print_endline fonction.id 
+  in 
 verif_expr fonction.corps
 
 (* Syntax.programme/Syntax.fun_decl list -> bool *)
