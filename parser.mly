@@ -30,6 +30,7 @@
 %start prog
 %type <Syntax.programme> prog
 
+%token SEQ
 
 %%
 
@@ -71,6 +72,8 @@ expr:
   | expr GREATEQ expr  { BinaryOp (GreatEq, $1, $3) }
   | expr LESS expr    { BinaryOp (Less, $1, $3) }
   | expr LESSEQ expr  { BinaryOp (LessEq, $1, $3) }
+  | expr SEQ expr  { BinaryOp (Seq, $1, $3) }
+  
 
 app_expr:
   | VAR LPAR list_expr RPAR { App ($1, $3) }

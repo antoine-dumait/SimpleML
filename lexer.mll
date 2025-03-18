@@ -39,6 +39,7 @@ rule token = parse
   | "<=" { LESSEQ }
   | "<>" { NEQ }
   | "!=" { NEQ }
+  | ";" { SEQ }
 
   | "let"  { LET }
   | "in"  { IN }

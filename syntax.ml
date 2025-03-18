@@ -24,12 +24,12 @@ type binary_op =
   | LessEq
   | Great
   | GreatEq
+  | Seq
 
 type unary_op = Not
 
 type expr =
   | Var of idvar
-  | IdFun of idfun
   | Int of int
   | Bool of bool
   | BinaryOp of binary_op * expr * expr
@@ -69,6 +69,7 @@ let string_of_binary_op binop =
   | LessEq -> "<="
   | Great -> ">"
   | GreatEq -> ">="
+  | Seq -> ";"
 
 let string_of_unary_op unop = match unop with Not -> "not"
 
@@ -81,7 +82,6 @@ let rec string_of_expr_list expr_list =
 and string_of_expr expr =
   match expr with
   | Var x -> x
-  | IdFun x -> x
   | Int n -> string_of_int n
   | Bool b -> string_of_bool b
   | BinaryOp (binop, expr1, expr2) ->
