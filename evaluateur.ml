@@ -63,6 +63,21 @@ let rec eval_expr expr envVar envFun =
       print_endline "binaryOp ";
       let v1, v2 = eval_expr expr1 envVar envFun, eval_expr expr2 envVar envFun in
       (match op, v1, v2 with
+      | And, MBool b1, MBool b2 -> MBool (b1 && b2)
+      | Or, MBool b1, MBool b2 -> MBool (b1 || b2)
+
+      | Equal, MInt n, MInt m -> MBool (n = m)
+      | Equal, MFloat n, MFloat m -> MBool (n = m)
+      | Equal, MBool n, MBool m -> MBool (n = m)
+      (* | Equal, MInt n, MFloat m -> MBool (float_of_int n = m)
+      | Equal, MFloat n, MInt m -> MBool (n = float_of_int m) *)
+
+      | NEqual, MInt n, MInt m -> MBool (n != m)
+      | NEqual, MFloat n, MFloat m -> MBool (n != m)
+      | NEqual, MBool n, MBool m -> MBool (n != m)
+      (* | NEqual, MInt n, MFloat m -> MBool (float_of_int n != m)
+      | NEqual, MFloat n, MInt m -> MBool (n != float_of_int m) *)
+
       | Plus, MInt n, MInt m -> MInt (n + m)
       | Plus, MFloat n, MFloat m -> MFloat (n +. m) (*Extension Float*)
       (* | Plus, MInt n, MFloat m -> MFloat (float_of_int n +. m) (*pour ajouter le casting automatique des int en float*)
@@ -82,16 +97,6 @@ let rec eval_expr expr envVar envFun =
       | Div, MFloat n, MFloat m -> MFloat (n /. m)
       (* | Div, MInt n, MFloat m -> MFloat (float_of_int n /. m)
       | Div, MFloat n, MInt m -> MFloat (n /. float_of_int m) *)
-      
-      | Equal, MInt n, MInt m -> MBool (n = m)
-      | Equal, MFloat n, MFloat m -> MBool (n = m)
-      (* | Equal, MInt n, MFloat m -> MBool (float_of_int n = m)
-      | Equal, MFloat n, MInt m -> MBool (n = float_of_int m) *)
-
-      | NEqual, MInt n, MInt m -> MBool (n != m)
-      | NEqual, MFloat n, MFloat m -> MBool (n != m)
-      (* | NEqual, MInt n, MFloat m -> MBool (float_of_int n != m)
-      | NEqual, MFloat n, MInt m -> MBool (n != float_of_int m) *)
       
       | Less, MInt n, MInt m -> MBool (n < m)
       | Less, MFloat n, MFloat m -> MBool (n < m)
@@ -113,7 +118,7 @@ let rec eval_expr expr envVar envFun =
       (* | GreatEq, MInt n, MFloat m -> MBool (float_of_int n >= m)
       | GreatEq, MFloat n, MInt m -> MBool (n >= float_of_int m) *)
 
-      | Seq, MUnit, x -> x 
+      | Seq, MUnit, x -> x
       | _ -> failwith "Erreur: opération binaire invalide")
   
   | Syntax.If (b, expr1, expr2) -> 

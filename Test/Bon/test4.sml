@@ -1,1 +1,1 @@
-let main() : int = print_int 5+3+3. ; 15
+let main() : int =@; @; (true = false) = false

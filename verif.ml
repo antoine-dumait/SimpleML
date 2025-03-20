@@ -55,17 +55,20 @@ let rec verif_expr expr voulu envVar envFun =
     | And | Or -> 
       print_endline "opTBool";
       verif_expr expr1 TBool envVar envFun && verif_expr expr2 TBool envVar envFun
-    | Plus |Minus |Mult |Div |Equal |NEqual |Less |LessEq |Great |GreatEq ->  print_endline "opTInt";
+    | Plus |Minus |Mult |Div |Less |LessEq |Great |GreatEq ->  print_endline "opTInt";
       print_endline "opNumeric";
          verif_expr expr1 TInt envVar envFun   && verif_expr expr2 TInt envVar envFun (*Extension Float*)
       || verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TFloat envVar envFun 
       (* || verif_expr expr1 TInt envVar envFun   && verif_expr expr2 TFloat envVar envFun  *) (*pour ajouter le casting automatique des int en float*)
       (* || verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TInt envVar envFun  *)
-    
+      |Equal |NEqual -> 
+        verif_expr expr1 TInt envVar envFun && verif_expr expr2 TInt envVar envFun 
+        || verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TFloat envVar envFun 
+        || verif_expr expr1 TBool envVar envFun && verif_expr expr2 TBool envVar envFun 
       | Seq ->  (*Extension Unit*)
       print_endline "opTUnit"; 
       verif_expr expr1 TUnit envVar envFun 
-      && (verif_expr expr2 TBool envVar envFun || verif_expr expr2 TInt envVar envFun || verif_expr expr2 TFloat envVar envFun)
+      && (verif_expr expr2 voulu envVar envFun || verif_expr expr2 voulu envVar envFun || verif_expr expr2 voulu envVar envFun)
     )
 
   | Syntax.If (b, expr1, expr2) ->

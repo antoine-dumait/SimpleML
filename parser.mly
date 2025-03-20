@@ -19,10 +19,10 @@
 %token TINT
 %token TBOOL
 %token SEQ (*Extension Unit*)
-%nonassoc SEQ (*Extension Unit*)
+// %nonassoc SEQ (*Extension Unit*)
 %token UNIT (*Extension Unit*)
 %token PRINT_INT (*Extension Affichage*)
-%nonassoc PRINT_INT (*Extension Affichage*)
+// %nonassoc PRINT_INT (*Extension Affichage*)
 
 %left ELSE IN
 %nonassoc NOT
