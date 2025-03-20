@@ -11,8 +11,6 @@ type typeFunc = {
 type env_var_type = typeVar list
 type env_func_type = typeFunc list
 
-let bool_to_string b = if b then "true" else "false"
-
 let rec verif_expr expr voulu envVar envFun =
   match expr with
   | Syntax.Var id ->
@@ -31,23 +29,43 @@ let rec verif_expr expr voulu envVar envFun =
     print_endline " int";
     voulu = TInt
 
+  | Syntax.Float f ->
+    print_float f;
+    print_endline " float";
+    voulu = TFloat
+
   | Syntax.Bool b ->
-    print_string (bool_to_string b);
+    print_string (string_of_bool b);
     print_endline "bool";
     voulu = TBool
 
-  | Syntax.UnaryOp (_, expr1) ->
+  | Syntax.Unit -> (*Extension Unit*)
+    print_endline "unit";
+    voulu = TUnit
+
+  | Syntax.UnaryOp (op, expr1) ->
     print_endline "unaryOp";
-    verif_expr expr1 TBool envVar envFun
+    (match op with
+    | Not -> verif_expr expr1 TBool envVar envFun
+    | Print_int -> verif_expr expr1 TInt envVar envFun) (*Extension Affichage*)
 
   | Syntax.BinaryOp (op, expr1, expr2) ->
     print_string "binaryOp ";
-    if op = And || op = Or then (
-      print_endline "TBool";
+    (match op with 
+    | And | Or -> 
+      print_endline "opTBool";
       verif_expr expr1 TBool envVar envFun && verif_expr expr2 TBool envVar envFun
-    ) else (
-      print_endline "TInt";
-      verif_expr expr1 TInt envVar envFun && verif_expr expr2 TInt envVar envFun
+    | Plus |Minus |Mult |Div |Equal |NEqual |Less |LessEq |Great |GreatEq ->  print_endline "opTInt";
+      print_endline "opNumeric";
+         verif_expr expr1 TInt envVar envFun   && verif_expr expr2 TInt envVar envFun (*Extension Float*)
+      || verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TFloat envVar envFun 
+      (* || verif_expr expr1 TInt envVar envFun   && verif_expr expr2 TFloat envVar envFun  *) (*pour ajouter le casting automatique des int en float*)
+      (* || verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TInt envVar envFun  *)
+    
+      | Seq ->  (*Extension Unit*)
+      print_endline "opTUnit"; 
+      verif_expr expr1 TUnit envVar envFun 
+      && (verif_expr expr2 TBool envVar envFun || verif_expr expr2 TInt envVar envFun || verif_expr expr2 TFloat envVar envFun)
     )
 
   | Syntax.If (b, expr1, expr2) ->
@@ -88,7 +106,7 @@ let verif_decl_fun (fonction: Syntax.fun_decl) envVar envFun =
                 ^ Syntax.string_of_fun_decl fonction
                 ^ "\n----------------------------------------\n");
   let b = verif_expr fonction.corps fonction.typ_retour envVar envFun in
-  print_string ("RESULTAT: " ^ fonction.id ^ " = " ^ bool_to_string b ^ "\n");
+  print_string ("RESULTAT: " ^ fonction.id ^ " = " ^ string_of_bool b ^ "\n");
   b
 
 let verif_prog prog =
@@ -138,5 +156,5 @@ let verif_prog prog =
   
   let resultat = if verifFunctions prog then verifMain prog else false in
   print_string ("@@@@@@@@@@@@@@@@@@@@\n" ^ 
-                "VERIFICATION PROGRAMME: " ^ bool_to_string resultat ^ "\n");
+                "VERIFICATION PROGRAMME: " ^ string_of_bool resultat ^ "\n");
   resultat

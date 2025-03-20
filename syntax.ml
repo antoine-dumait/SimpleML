@@ -1,5 +1,5 @@
 (* typ représente les types de SimpleML *)
-type typ = TInt | TBool
+type typ = TInt | TBool | TFloat | TUnit
 
 (* Définition de l'arbre de syntaxe abstrait des expressions de SimpleML *)
 
@@ -24,14 +24,16 @@ type binary_op =
   | LessEq
   | Great
   | GreatEq
-  | Seq
+  | Seq (*Extension Unit*)
 
-type unary_op = Not
+type unary_op = Not | Print_int (*Extension Affichage*)
 
 type expr =
   | Var of idvar
   | Int of int
+  | Float of float (*Extension Float*)
   | Bool of bool
+  | Unit (*Extension Unit*)
   | BinaryOp of binary_op * expr * expr
   | UnaryOp of unary_op * expr
   | If of expr * expr * expr
@@ -53,7 +55,9 @@ type programme = fun_decl list
 
 (* Fonctions d'affichage pour la syntaxe de SimpleML *)
 
-let string_of_type typ = match typ with TInt -> "int" | TBool -> "bool"
+let string_of_type typ = match typ with TInt -> "int" | TBool -> "bool" 
+| TFloat -> "float" (*Extension Float*) 
+| TUnit -> "unit" (*Extension Unit*)
 
 let string_of_binary_op binop =
   match binop with
@@ -69,9 +73,9 @@ let string_of_binary_op binop =
   | LessEq -> "<="
   | Great -> ">"
   | GreatEq -> ">="
-  | Seq -> ";"
+  | Seq -> ";" (*Extension Unit*)
 
-let string_of_unary_op unop = match unop with Not -> "not"
+let string_of_unary_op unop = match unop with |Not -> "not" | Print_int -> "print_int"
 
 let rec string_of_expr_list expr_list =
   match expr_list with
@@ -83,6 +87,8 @@ and string_of_expr expr =
   match expr with
   | Var x -> x
   | Int n -> string_of_int n
+  | Float f -> string_of_float f (*Extension Float*)
+  | Unit -> ";" (*Extension Unit*)
   | Bool b -> string_of_bool b
   | BinaryOp (binop, expr1, expr2) ->
       string_of_expr expr1 ^ string_of_binary_op binop ^ string_of_expr expr2

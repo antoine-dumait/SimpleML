@@ -5,6 +5,7 @@
 
 %token EOF
 %token <int> INT
+%token <float> FLOAT (*Extension Float*)
 %token <Syntax.idvar> VAR
 %token EQ
 %token PLUS MINUS MULT DIV
@@ -17,6 +18,11 @@
 
 %token TINT
 %token TBOOL
+%token SEQ (*Extension Unit*)
+%nonassoc SEQ (*Extension Unit*)
+%token UNIT (*Extension Unit*)
+%token PRINT_INT (*Extension Affichage*)
+%nonassoc PRINT_INT (*Extension Affichage*)
 
 %left ELSE IN
 %nonassoc NOT
@@ -29,8 +35,6 @@
 
 %start prog
 %type <Syntax.programme> prog
-
-%token SEQ
 
 %%
 
@@ -52,6 +56,8 @@ list_implem_decl:
 expr:
   | VAR             { Var $1 }
   | INT             { Int $1 }
+  | FLOAT           { Float $1 } (*Extension Float*)
+  | UNIT            { Unit } (*Extension Unit*)
   | TRUE            { Bool true }
   | FALSE           { Bool false }
   | LPAR expr RPAR   { $2 }
@@ -63,16 +69,17 @@ expr:
   | expr MINUS expr    { BinaryOp (Minus, $1, $3) }
   | expr MULT expr     { BinaryOp (Mult, $1, $3) }
   | expr DIV expr      { BinaryOp (Div, $1, $3) }
-  | NOT expr          { UnaryOp (Not, $2) }
+  | NOT expr           { UnaryOp (Not, $2) }
+  | PRINT_INT expr     { UnaryOp (Print_int, $2) } (*Extension Affichage*)
   | expr LAND expr     { BinaryOp (And, $1, $3) }
   | expr LOR expr      { BinaryOp (Or, $1, $3) }
-  | expr EQ expr      { BinaryOp (Equal, $1, $3) }
-  | expr NEQ expr     { BinaryOp (NEqual, $1, $3) }
+  | expr EQ expr       { BinaryOp (Equal, $1, $3) }
+  | expr NEQ expr      { BinaryOp (NEqual, $1, $3) }
   | expr GREAT expr    { BinaryOp (Great, $1, $3) }
   | expr GREATEQ expr  { BinaryOp (GreatEq, $1, $3) }
-  | expr LESS expr    { BinaryOp (Less, $1, $3) }
-  | expr LESSEQ expr  { BinaryOp (LessEq, $1, $3) }
-  | expr SEQ expr  { BinaryOp (Seq, $1, $3) }
+  | expr LESS expr     { BinaryOp (Less, $1, $3) }
+  | expr LESSEQ expr   { BinaryOp (LessEq, $1, $3) }
+  | expr SEQ expr      { BinaryOp (Seq, $1, $3) } (*Extension Unit*)
   
 
 app_expr:

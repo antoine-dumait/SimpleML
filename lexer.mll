@@ -15,6 +15,7 @@ let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let ident = ['a'-'z'] (alpha | '_' | '\'' | digit)*
 let integer = digit+
+let float = digit+ '.' digit* (* 1.: oui, 0.23: oui, .23: non*) (*Extension Float*)
 
 rule token = parse
   | '\n'  { newline lexbuf; token lexbuf }
@@ -39,7 +40,7 @@ rule token = parse
   | "<=" { LESSEQ }
   | "<>" { NEQ }
   | "!=" { NEQ }
-  | ";" { SEQ }
+  | ";" { SEQ } (*Extension Unit*)
 
   | "let"  { LET }
   | "in"  { IN }
@@ -58,11 +59,16 @@ rule token = parse
   | ')'  { RPAR }
   | ','  { COMMA }
   | ':'  { COLON }
+
+  | '@' {UNIT} (*Extension Unit*)
   
+  | "print_int" {PRINT_INT} (*Extension Affichage*)
+
   | eof  { EOF }
 
 
   | integer as n  { INT (int_of_string n) }
+  | float as f  { FLOAT (float_of_string f) } (*Extension Float*)
   | ident as id  { VAR id }
 
   | _  { raise Error }
