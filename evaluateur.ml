@@ -2,7 +2,7 @@ type myType = MInt of int | MBool of bool
 | MFloat of float (*Extension Float*) 
 | MUnit (*Extension Unit*)
 
-let mType_to_string = function
+let valeur_to_string = function
   | MBool true -> "true"
   | MBool false -> "false"
   | MInt n -> string_of_int n 
@@ -25,42 +25,42 @@ type env_func_type = typeFunc list
 let rec eval_expr expr envVar envFun =
   match expr with
   | Syntax.Var id ->     
-      print_string "var ";
+      (* print_string "var "; *)
       let rec aux = function
         | [] -> failwith "Erreur: variable non trouvée"
         | t :: reste ->
             if t.idVar = id then (
-              print_endline (t.idVar ^ ": " ^ mType_to_string t.valeur);
+              (* print_endline (t.idVar ^ ": " ^ valeur_to_string t.valeur); *)
               t.valeur
             ) else aux reste
       in aux envVar
   
   | Syntax.Int n ->
-      print_endline (string_of_int n);
+      (* print_endline (string_of_int n); *)
       MInt n
 
   | Syntax.Float f ->
-      print_endline (string_of_float f);
+      (* print_endline (string_of_float f); *)
       MFloat f
   
   | Syntax.Bool b ->
-    print_endline (string_of_bool b);
+    (* print_endline (string_of_bool b); *)
     MBool b
       
   | Syntax.Unit -> (*Extension Unit*)
-    print_endline "unit";
+    (* print_endline "unit"; *)
     MUnit
 
   | Syntax.UnaryOp (op, expr1) -> 
-    print_string "unaryOp ";
+    (* print_string "unaryOp "; *)
     let v = eval_expr expr1 envVar envFun in 
       (match op, v with
       | Not, MBool b -> MBool (not b)
-      | Print_int, MInt n -> print_endline ("SimpleML: " ^ (string_of_int n)); MUnit (*Extension Affichage*)
+      | Print_int, MInt n -> print_endline ("SimpleML affichage: " ^ (string_of_int n)); MUnit (*Extension Affichage*)
       | _, _ -> failwith "unaryOp, inconnu") 
   
   | Syntax.BinaryOp (op, expr1, expr2) -> 
-      print_endline "binaryOp ";
+      (* print_endline "binaryOp "; *)
       let v1, v2 = eval_expr expr1 envVar envFun, eval_expr expr2 envVar envFun in
       (match op, v1, v2 with
       | And, MBool b1, MBool b2 -> MBool (b1 && b2)
@@ -122,25 +122,25 @@ let rec eval_expr expr envVar envFun =
       | _ -> failwith "Erreur: opération binaire invalide")
   
   | Syntax.If (b, expr1, expr2) -> 
-      print_endline "If";
+      (* print_endline "If"; *)
       (match eval_expr b envVar envFun with 
       | MBool true -> eval_expr expr1 envVar envFun
       | MBool false -> eval_expr expr2 envVar envFun
       | _ -> failwith "Erreur: condition non booléenne")
   
   | Syntax.Let (id, _, exprIn, exprOut) -> 
-      print_endline "let";
+      (* print_endline "let"; *)
       let valeur = eval_expr exprIn envVar envFun in
       eval_expr exprOut ({ idVar = id; valeur } :: envVar) envFun
   
   | Syntax.App (funId, exprList) -> 
-      print_string "app ";
+      (* print_string "app "; *)
       let rec find = function
         | [] -> failwith "Erreur: fonction non trouvée dans App"
         | f :: reste -> if f.idFun = funId then f else find reste
       in
       let f = find envFun in
-      print_endline f.idFun;
+      (* print_endline f.idFun; *)
       let paramsEval =
         List.map2 (fun param name -> { idVar = name; valeur = eval_expr param envVar envFun })
           exprList f.varNames
@@ -148,14 +148,13 @@ let rec eval_expr expr envVar envFun =
       eval_expr f.corps (paramsEval @ envVar) envFun
       
 let eval_prog prog = 
-  print_endline "EVALUATION PROGRAMME";
+  (* print_endline "EVALUATION PROGRAMME"; *)
   
   let funcTypes =
     List.map (fun f -> { idFun = f.Syntax.id; varNames = List.map fst f.Syntax.var_list; corps = f.Syntax.corps }) prog
   in
   
-  let rec evalMain = function
-    | [] -> failwith "Erreur: fonction 'main' non trouvée"
-    | f :: reste -> if f.Syntax.id = "main" then eval_expr f.corps [] funcTypes else evalMain reste
-  in
-  print_endline ("RESULTAT EVALUATION: " ^ mType_to_string (evalMain prog))
+  if (List.hd prog).id = "main" then
+    print_endline ("RESULTAT EVALUATION: " ^ valeur_to_string (eval_expr (List.hd prog).Syntax.corps [] funcTypes))
+  else 
+    failwith "Erreur: fonction 'main' non trouvée"

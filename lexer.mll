@@ -53,6 +53,8 @@ rule token = parse
 
   | "int" { TINT }
   | "bool" { TBOOL }
+  | "float" { TFLOAT }
+  | "unit" { TUNIT }
 
 
   | '('  { LPAR }

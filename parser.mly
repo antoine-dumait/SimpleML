@@ -18,14 +18,16 @@
 
 %token TINT
 %token TBOOL
+%token TFLOAT (*Extension Float*)
+%token TUNIT (*Extension Unit*)
 %token SEQ (*Extension Unit*)
-// %nonassoc SEQ (*Extension Unit*)
 %token UNIT (*Extension Unit*)
 %token PRINT_INT (*Extension Affichage*)
-// %nonassoc PRINT_INT (*Extension Affichage*)
 
 %left ELSE IN
+%left SEQ (*Extension Unit*)
 %nonassoc NOT
+%nonassoc PRINT_INT (*Extension Affichage*)
 %nonassoc EQ NEQ GREAT GREATEQ LESS LESSEQ
 %left LOR
 %left LAND
@@ -43,6 +45,8 @@ prog: list_implem_decl; EOF  { $1 }
 ty:
   | TBOOL        { TBool }
   | TINT         { TInt }
+  | TFLOAT         { TFloat }
+  | TUNIT         { TUnit }
 
 fun_decl:
   | LET VAR LPAR list_typed_ident RPAR COLON ty EQ expr
