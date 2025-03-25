@@ -1,3 +1,8 @@
+(*
+Groupe: 681C
+Binôme AGANZE LWABOSHI MOISE et DUMAIT ANTOINE
+*)
+
 type typeVar = {
   idVar: Syntax.idvar;
   valeur: Syntax.typ;

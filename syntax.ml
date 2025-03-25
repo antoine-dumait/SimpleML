@@ -1,3 +1,8 @@
+(*
+Groupe: 681C
+Binôme AGANZE LWABOSHI MOISE et DUMAIT ANTOINE
+*)
+
 (* typ représente les types de SimpleML *)
 type typ = TInt | TBool | TFloat | TUnit
 
@@ -75,7 +80,7 @@ let string_of_binary_op binop =
   | GreatEq -> ">="
   | Seq -> ";" (*Extension Unit*)
 
-let string_of_unary_op unop = match unop with |Not -> "not" | Print_int -> "print_int"
+let string_of_unary_op unop = match unop with |Not -> "not" | Print_int -> "print_int" (*Extension Affichage*)
 
 let rec string_of_expr_list expr_list =
   match expr_list with

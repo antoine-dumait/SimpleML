@@ -1,3 +1,7 @@
+(*
+Groupe: 681C
+Binôme AGANZE LWABOSHI MOISE et DUMAIT ANTOINE
+*)
 %{
   open Syntax
 %}
@@ -45,8 +49,8 @@ prog: list_implem_decl; EOF  { $1 }
 ty:
   | TBOOL        { TBool }
   | TINT         { TInt }
-  | TFLOAT         { TFloat }
-  | TUNIT         { TUnit }
+  | TFLOAT         { TFloat } (*Extension Float*)
+  | TUNIT         { TUnit } (*Extension Unit*)
 
 fun_decl:
   | LET VAR LPAR list_typed_ident RPAR COLON ty EQ expr

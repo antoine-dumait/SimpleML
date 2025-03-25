@@ -1,3 +1,7 @@
+(*
+Groupe: 681C
+Binôme AGANZE LWABOSHI MOISE et DUMAIT ANTOINE
+*)
 {
   open Lexing
   open Parser

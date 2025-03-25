@@ -1,3 +1,7 @@
+(*
+Groupe: 681C
+Binôme AGANZE LWABOSHI MOISE et DUMAIT ANTOINE
+*)
 type myType = MInt of int | MBool of bool 
 | MFloat of float (*Extension Float*) 
 | MUnit (*Extension Unit*)
