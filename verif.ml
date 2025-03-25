@@ -76,8 +76,12 @@ let rec verif_expr expr voulu envVar envFun =
     
       | Equal | NEqual -> 
         (* print_endline "opEqual"; *)
-        verif_expr expr1 voulu envVar envFun && verif_expr expr2 voulu envVar envFun 
+        voulu = TBool &&
+        ((verif_expr expr1 TInt envVar envFun && verif_expr expr2 TInt envVar envFun) 
+        || (verif_expr expr1 TFloat envVar envFun && verif_expr expr2 TFloat envVar envFun )
+        || (verif_expr expr1 TBool envVar envFun && verif_expr expr2 TBool envVar envFun ))
     
+  
       | Seq ->  (*Extension Unit*)
         (* print_endline "opTUnit";  *)
         verif_expr expr1 TUnit envVar envFun && verif_expr expr2 voulu envVar envFun
